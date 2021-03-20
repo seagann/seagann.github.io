@@ -1,0 +1,196 @@
+<!-- Credit to bad4iz -->
+
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Memento Mori</title>
+</head>
+
+<body>
+    <style>
+        body {
+            -webkit-print-color-adjust: exact !important;
+        }
+
+        .week {
+            width: 10px;
+            height: 10px;
+            margin: 2px;
+            border-radius: 1px;
+        }
+
+        .weeks-left {
+            border: 1px solid grey;
+        }
+
+        .weeks-lived {
+            border: 1px solid black;
+            background-color: rgb(46, 46, 46);
+        }
+
+        .year {
+            display: flex;
+            flex-wrap: nowrap;
+            justify-content: center;
+        }
+
+        h1 {
+            text-align: center;
+            margin: 0;
+        }
+
+        .text {
+            position: relative;
+            bottom: 7px;
+        }
+
+        figcaption {
+            margin: 40px;
+            text-align: right;
+            text-transform: uppercase;
+            font-family: serif;
+            font-size: small;
+
+        }
+
+        blockquote {
+            margin: 10px 20px 0 20px;
+            text-align: center;
+            font-family: serif;
+            font-size: large;
+        }
+
+        .footer {
+            bottom: 0;
+        }
+
+        @media print {
+            .print-hidden {
+                display: none;
+            }
+            .footer {
+                position: absolute;
+                bottom: 20px;
+                right: 20px;
+                left: 20px;
+            }
+        }
+    </style>
+    <div class="print-hidden">
+        <input type="date" name="" value='' id="birthday">
+<!-- birthday goes here ^^ -->
+
+    </div>
+    <div class="container">
+
+        <h1>MEMENTO MORI</h1>
+
+        <div id="content">
+        </div>
+
+        <div class="footer">
+
+            <blockquote>
+                It is not that we have so little time but that we lose so much [...] The life we receive is not short but we make it so; we are not ill provided but use what we have wastefully.            </blockquote>
+            <figcaption>Seneca</figcaption>
+        </div>
+    </div>
+
+
+    <script>
+
+        const createYear = () => {
+            const element = document.createElement('div');
+            element.classList.add('year')
+            return element;
+        }
+
+        const createSpace = (cl, cl2) => {
+            const element = document.createElement('div');
+            element.classList.add('week')
+            if (cl) {
+                element.classList.add(cl)
+            }
+            if (cl2) {
+                element.classList.add(cl2)
+            }
+            return element;
+        }
+
+        const content = document.body.querySelector('#content')
+        const leta = document.body.querySelector('#let')
+
+        const years = 65;
+        const weeks = 52;
+
+
+        for (let index = 0; index < years; index++) {
+            const year = createYear()
+            if (!(index % 10)) {
+                console.log('lll')
+                const element = createSpace()
+                content.append(element)
+            }
+            for (let idx = 0; idx < weeks; idx++) {
+                if (!(idx % (weeks / 2))) {
+                    const element = createSpace()
+                    year.append(element)
+                }
+
+
+                const element = createSpace('weeks-left', 'col')
+                year.append(element)
+
+            }
+
+            if (!((index + 1) % 5)) {
+                const element = createSpace('text')
+                element.textContent = index + 1
+                year.append(createSpace())
+                year.append(element)
+            } else {
+                year.append(createSpace())
+                year.append(createSpace())
+            }
+            content.append(year)
+
+        }
+
+        const birthday = document.querySelector('#birthday')
+
+        const computed = () => {
+            const millisecondsPassed = +new Date() - +new Date(birthday.value)
+
+            const weeksLived = millisecondsPassed / (1000 * 60 * 60 * 24 * 7);
+            const w = document.querySelectorAll('.col')
+            w.forEach((item, idx) => {
+                if (idx >= weeksLived) {
+                    item.classList.remove('weeks-lived')
+                    item.classList.add('weeks-left')
+                } else {
+                    item.classList.remove('weeks-left')
+                    item.classList.add('weeks-lived')
+                }
+            });
+        }
+
+        birthday.onchange = (value) => {
+            computed()
+        }
+        computed()
+
+
+        const print = document.querySelector('#print');
+        print.onclick = () => {
+            window.print()
+        }
+    
+
+
+    </script>
+</body>
+
+</html>
